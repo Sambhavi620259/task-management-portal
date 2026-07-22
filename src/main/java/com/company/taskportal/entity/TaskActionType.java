@@ -1,0 +1,55 @@
+package com.company.taskportal.entity;
+
+public enum TaskActionType {
+
+    CREATED,
+
+    UPDATED,
+
+    ASSIGNED,
+
+    REASSIGNED,
+
+    STARTED,
+
+    IN_PROGRESS,
+
+    ON_HOLD,
+
+    RESUMED,
+
+    COMPLETED,
+
+    REVIEWED,
+
+    APPROVED,
+
+    REJECTED,
+
+    CANCELLED,
+
+    REOPENED,
+
+    PRIORITY_CHANGED,
+
+    STATUS_CHANGED,
+
+    DUE_DATE_CHANGED,
+
+    CATEGORY_CHANGED,
+
+    PROJECT_CHANGED,
+
+    COMMENT_ADDED,
+
+    ATTACHMENT_ADDED,
+
+    ATTACHMENT_REMOVED,
+
+    CHECKLIST_UPDATED,
+
+    TIME_LOGGED,
+
+    DELETED
+
+}

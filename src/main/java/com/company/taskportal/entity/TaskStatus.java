@@ -20,6 +20,6 @@ public enum TaskStatus {
 
     CANCELLED,
 
-    OVERDUE
+    PENDING, OVERDUE
 
 }

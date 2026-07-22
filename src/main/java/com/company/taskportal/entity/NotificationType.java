@@ -1,0 +1,39 @@
+package com.company.taskportal.entity;
+
+public enum NotificationType {
+
+    TASK_ASSIGNED,
+
+    TASK_REASSIGNED,
+
+    TASK_STARTED,
+
+    TASK_IN_PROGRESS,
+
+    TASK_COMPLETED,
+
+    TASK_REOPENED,
+
+    TASK_APPROVED,
+
+    TASK_REJECTED,
+
+    TASK_CANCELLED,
+
+    TASK_UPDATED,
+
+    COMMENT_ADDED,
+
+    ATTACHMENT_ADDED,
+
+    CHECKLIST_UPDATED,
+
+    TIME_LOGGED,
+
+    DUE_DATE_REMINDER,
+
+    OVERDUE,
+
+    GENERAL
+
+}

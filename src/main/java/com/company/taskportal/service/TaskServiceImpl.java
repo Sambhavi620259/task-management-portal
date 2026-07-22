@@ -6,6 +6,7 @@ import com.company.taskportal.entity.*;
 import com.company.taskportal.exception.ResourceAlreadyExistsException;
 import com.company.taskportal.exception.ResourceNotFoundException;
 import com.company.taskportal.repository.*;
+import com.company.taskportal.service.EmailService;
 import com.company.taskportal.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class TaskServiceImpl implements TaskService {
     private final EmployeeRepository employeeRepository;
     private final TaskCategoryRepository taskCategoryRepository;
     private final FrequencyRepository frequencyRepository;
+    private final EmailService emailService;
 
     private Organization getOrganization(Long id) {
         return organizationRepository.findById(id)
@@ -255,6 +257,10 @@ public class TaskServiceImpl implements TaskService {
 
         Task task = mapToEntity(request);
         Task savedTask = taskRepository.save(task);
+
+        if (Boolean.TRUE.equals(savedTask.getEmailNotification())) {
+            emailService.sendTaskAssignmentEmail(savedTask);
+        }
 
         return mapToResponse(savedTask);
     }
@@ -532,5 +538,56 @@ public class TaskServiceImpl implements TaskService {
         task.setActive(false);
 
         taskRepository.save(task);
+    }
+    @Override
+    public TaskResponse updateProgress(Long taskId, Integer completionPercentage) {
+        Task task = taskRepository.findByIdAndDeletedFalse(taskId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Task not found with id : " + taskId));
+
+        if (completionPercentage < 0 || completionPercentage > 100) {
+            throw new IllegalArgumentException(
+                    "Completion percentage must be between 0 and 100");
+        }
+
+        task.setCompletionPercentage(completionPercentage);
+
+        if (completionPercentage == 100) {
+            task.setStatus(TaskStatus.COMPLETED);
+            task.setCompletedDate(java.time.LocalDate.now());
+        } else if (task.getStatus() == TaskStatus.OPEN
+                || task.getStatus() == TaskStatus.ASSIGNED) {
+            task.setStatus(TaskStatus.IN_PROGRESS);
+        }
+
+        Task savedTask = taskRepository.save(task);
+
+        // Trigger completion email if applicable
+        if (savedTask.getStatus() == TaskStatus.COMPLETED
+                && Boolean.TRUE.equals(savedTask.getEmailNotification())) {
+            emailService.sendTaskCompletionEmail(savedTask);
+        }
+
+        return mapToResponse(savedTask);
+    }
+    @Override
+    public TaskResponse completeTask(Long taskId) {
+        Task task = taskRepository.findByIdAndDeletedFalse(taskId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Task not found with id : " + taskId));
+
+        task.setStatus(TaskStatus.COMPLETED);
+        task.setCompletionPercentage(100);
+        task.setCompletedDate(java.time.LocalDate.now());
+
+        Task savedTask = taskRepository.save(task);
+
+        // Trigger completion email if applicable
+        if (savedTask.getStatus() == TaskStatus.COMPLETED
+                && Boolean.TRUE.equals(savedTask.getEmailNotification())) {
+            emailService.sendTaskCompletionEmail(savedTask);
+        }
+
+        return mapToResponse(savedTask);
     }
 }

@@ -188,4 +188,6 @@ public class Task extends BaseEntity {
     @Builder.Default
     @Column(name = "auto_generate_next")
     private Boolean autoGenerateNext = false;
+
+
 }

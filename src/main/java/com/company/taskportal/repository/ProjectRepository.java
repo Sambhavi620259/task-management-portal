@@ -32,4 +32,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     List<Project> findByOrganizationIdAndDeletedFalse(Long organizationId);
 
+    // Fixed: changed return type from boolean to long
+    long countByDeletedFalse();
 }

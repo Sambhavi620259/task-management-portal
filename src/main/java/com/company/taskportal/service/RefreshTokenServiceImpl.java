@@ -1,4 +1,4 @@
-package com.company.taskportal.service.impl;
+package com.company.taskportal.service;
 
 import com.company.taskportal.entity.RefreshToken;
 import com.company.taskportal.entity.User;

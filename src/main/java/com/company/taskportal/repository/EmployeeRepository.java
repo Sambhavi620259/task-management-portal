@@ -46,4 +46,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     List<Employee> findByDepartmentIdAndDeletedFalse(Long departmentId);
 
+    long countByDeletedFalse();
+
+    long countByActiveTrueAndDeletedFalse();
 }

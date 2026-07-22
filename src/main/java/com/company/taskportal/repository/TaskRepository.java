@@ -1,6 +1,15 @@
 package com.company.taskportal.repository;
 
-import com.company.taskportal.entity.*;
+import com.company.taskportal.entity.Department;
+import com.company.taskportal.entity.Employee;
+import com.company.taskportal.entity.Frequency;
+import com.company.taskportal.entity.Organization;
+import com.company.taskportal.entity.Priority;
+import com.company.taskportal.entity.Project;
+import com.company.taskportal.entity.Task;
+import com.company.taskportal.entity.TaskCategory;
+import com.company.taskportal.entity.TaskStatus;
+import com.company.taskportal.entity.TaskType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -50,11 +59,21 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             TaskStatus status
     );
 
-    List<Task> findByDueDate(LocalDate dueDate);
+    List<Task> findByDueDateAndDeletedFalse(LocalDate dueDate);
 
-    List<Task> findByStartDate(LocalDate startDate);
+    List<Task> findByStartDateAndDeletedFalse(LocalDate startDate);
 
-    List<Task> findByNextExecutionDate(LocalDate nextExecutionDate);
+    List<Task> findByNextExecutionDateAndDeletedFalse(LocalDate nextExecutionDate);
+
+    /**
+     * Recurring Task Engine
+     */
+    List<Task> findByAutoGenerateNextTrueAndDeletedFalse();
+
+    /**
+     * Dashboard Statistics
+     */
+    long countByDeletedFalse();
 
     long countByStatusAndDeletedFalse(TaskStatus status);
 
@@ -62,4 +81,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     long countByAssignedToAndDeletedFalse(Employee employee);
 
+    long countByDueDateBeforeAndStatusNotAndDeletedFalse(
+            LocalDate dueDate,
+            TaskStatus status
+    );
 }
